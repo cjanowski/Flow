@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -63,9 +63,30 @@ interface ThreeJSBackgroundProps {
 }
 
 export default function ThreeJSBackground({ prompt }: ThreeJSBackgroundProps) {
-  return (
-    <Canvas camera={{ position: [0, 0, 1] }}>
-      <AnimatedPoints prompt={prompt} />
-    </Canvas>
-  )
+  const [isReady, setIsReady] = useState(false)
+
+  useEffect(() => {
+    // Ensure React is fully initialized before rendering Canvas
+    setIsReady(true)
+  }, [])
+
+  if (!isReady) {
+    return null
+  }
+
+  try {
+    return (
+      <Canvas
+        camera={{ position: [0, 0, 1] }}
+        onCreated={() => {
+          // Canvas successfully created
+        }}
+      >
+        <AnimatedPoints prompt={prompt} />
+      </Canvas>
+    )
+  } catch (error) {
+    console.error('Three.js Canvas error:', error)
+    return null
+  }
 }
