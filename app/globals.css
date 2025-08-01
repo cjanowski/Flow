@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply overflow-hidden;
+  }
+}
+
+@layer components {
+  .gradient-bg {
+    background: linear-gradient(-45deg, #1e1b4b, #312e81, #1e40af, #1e3a8a);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
+  
+  .glass-effect {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-lg;
+  }
+}
