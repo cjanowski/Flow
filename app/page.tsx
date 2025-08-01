@@ -17,16 +17,23 @@ export default function Home() {
     setIsGenerating(true)
     
     try {
-      // TODO: Implement AI audio generation
-      console.log('Generating flow for:', prompt)
+      const response = await fetch('/api/generate-audio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      })
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      if (!response.ok) {
+        throw new Error('Failed to generate audio')
+      }
       
-      // Mock audio URL - replace with actual generation
-      setAudioUrl('/mock-audio.mp3')
+      const data = await response.json()
+      setAudioUrl(data.audioUrl)
     } catch (error) {
       console.error('Failed to generate flow:', error)
+      // Show error to user
     } finally {
       setIsGenerating(false)
     }
