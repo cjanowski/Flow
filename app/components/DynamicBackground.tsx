@@ -1,23 +1,24 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
 function AnimatedPoints({ prompt }: { prompt: string }) {
   const ref = useRef<THREE.Points>(null!)
-  const sphere = new Float32Array(5000 * 3)
   
-  // Generate random points in a sphere
-  for (let i = 0; i < 5000; i++) {
+  // Create geometry with random points
+  const particleCount = 5000
+  const positions = new Float32Array(particleCount * 3)
+  
+  for (let i = 0; i < particleCount; i++) {
     const radius = Math.random() * 2
     const theta = Math.random() * Math.PI * 2
     const phi = Math.acos(Math.random() * 2 - 1)
     
-    sphere[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
-    sphere[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta)
-    sphere[i * 3 + 2] = radius * Math.cos(phi)
+    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
+    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta)
+    positions[i * 3 + 2] = radius * Math.cos(phi)
   }
 
   useFrame((state) => {
@@ -37,15 +38,23 @@ function AnimatedPoints({ prompt }: { prompt: string }) {
   }
 
   return (
-    <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
-      <PointMaterial
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
         transparent
         color={getColorFromPrompt(prompt)}
         size={0.002}
         sizeAttenuation={true}
         depthWrite={false}
       />
-    </Points>
+    </points>
   )
 }
 
