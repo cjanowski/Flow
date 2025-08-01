@@ -9,7 +9,6 @@ const nextConfig = {
     domains: ['vercel.app'],
   },
   // Optimize for production
-  swcMinify: true,
   compress: true,
 }
 
