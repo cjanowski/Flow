@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -63,6 +63,16 @@ interface DynamicBackgroundProps {
 }
 
 export default function DynamicBackground({ prompt }: DynamicBackgroundProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return <div className="absolute inset-0 gradient-bg" />
+  }
+
   return (
     <div className="absolute inset-0 gradient-bg">
       <Canvas camera={{ position: [0, 0, 1] }}>
